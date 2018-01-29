@@ -6,7 +6,7 @@ import subprocess
 from funciones.auxiliares import array_join
 
 
-class PsAux():
+class PsAux:
     def __init__(self, arrInfo):
         self.usuario = arrInfo[0]
         self.pid = int(arrInfo[1])
@@ -23,7 +23,11 @@ class PsAux():
 
 def monitorear_pid(pid, mensage, callback=None):
     pid = int(pid)
-    p = psutil.Process(pid)
+    try:
+        p = psutil.Process(pid)
+    except psutil.NoSuchProcess as e:
+        logging.error(str(e))
+        exit(1)
     logging.info('Iniciando monitoreo del pid %s', str(pid))
     while p.is_running():
         continue
@@ -31,7 +35,7 @@ def monitorear_pid(pid, mensage, callback=None):
 
 
 def monitorear_app(app, callback=None):
-    comando = 'ps aux --columns 1000 | grep -i {0!s} | grep -v grep'
+    comando = 'ps aux --columns 1000 | grep -i \'{0!s}\' | grep -v grep'
     comando = str.format(comando, app)
 
     procesos = execute_command(comando)
