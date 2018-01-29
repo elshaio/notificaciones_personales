@@ -73,6 +73,9 @@ def monitorear_app(app, callback=None):
 
 
 def execute_command(command=''):
+    if command == '':
+        return ''
+
     commands = command.split("|")
     stdout = execute_command_on_pipe(commands)
 
